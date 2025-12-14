@@ -1,23 +1,38 @@
-//! By convention, root.zig is the root source file when making a library.
-const std = @import("std");
+const command = @import("./command.zig");
+const context = @import("./context.zig");
+const flag = @import("./flag.zig");
+const manual = @import("./manual.zig");
 
-pub fn bufferedPrint() !void {
-    // Stdout is for the actual output of your application, for example if you
-    // are implementing gzip, then only the compressed bytes should be sent to
-    // stdout, not any debugging messages.
-    var stdout_buffer: [1024]u8 = undefined;
-    var stdout_writer = std.fs.File.stdout().writer(&stdout_buffer);
-    const stdout = &stdout_writer.interface;
+pub const Command = command.Command;
+pub const Commands = command.Commands;
 
-    try stdout.print("Run `zig build test` to run the tests.\n", .{});
+pub const Context = context.Context;
 
-    try stdout.flush(); // Don't forget to flush!
-}
+pub const Flag = flag.Flag;
+pub const Flags = flag.Flags;
 
-pub fn add(a: i32, b: i32) i32 {
-    return a + b;
-}
+pub const Manual = manual.Manual;
 
-test "basic add functionality" {
-    try std.testing.expect(add(3, 7) == 10);
+pub fn customize(comptime Custom: type) type {
+    return struct {
+        const C = @This();
+
+        pub const Command = command.Command(Custom);
+
+        pub fn Commands(comptime commands: []const C.Command) type {
+            return command.Commands(Custom, commands);
+        }
+
+        pub const Context = context.Context(Custom);
+
+        pub const Flag = flag.Flag(Custom);
+
+        pub fn Flags(comptime flags: []const C.Flag) type {
+            return flag.Flags(Custom, flags);
+        }
+
+        pub fn Manual(comptime commands: []const C.Command) type {
+            return manual.Manual(Custom, commands);
+        }
+    };
 }
