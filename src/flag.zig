@@ -14,8 +14,9 @@ fn startsWith(haystack: []const u8, needle: []const u8) bool {
 pub fn Flag(comptime Custom: type) type {
     return struct {
         long: []const u8,
-        short: u8,
+        short: ?u8 = null,
         description: []const u8,
+        arg: ?[]const u8 = null,
         accept: *const fn (ctx: zli.Context(Custom)) anyerror!void,
     };
 }
@@ -46,8 +47,10 @@ pub fn Flags(
             const is_short = !is_long and startsWith(arg, "-");
 
             inline for (flags) |f| {
-                if (arg.len > 1 and is_short and f.short == arg[1]) {
-                    return f;
+                if (f.short) |short| {
+                    if (arg.len > 1 and is_short and short == arg[1]) {
+                        return f;
+                    }
                 }
                 if (arg.len > 2 and is_long and eqlIgnoreCase(f.long, arg[2..])) {
                     return f;
