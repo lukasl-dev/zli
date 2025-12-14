@@ -24,7 +24,7 @@ pub fn main() !void {
     );
 
     const name = args.next() orelse {
-        const manual: zli.Manual(commands) = .default;
+        const manual: zli.print.Manual(commands) = .default;
         try manual.printContextless(&stdout.interface, exec);
         return;
     };

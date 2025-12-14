@@ -1,7 +1,6 @@
 const command = @import("./command.zig");
 const context = @import("./context.zig");
 const flag = @import("./flag.zig");
-const manual = @import("./manual.zig");
 
 pub const Command = command.Command;
 pub const Commands = command.Commands;
@@ -11,7 +10,7 @@ pub const Context = context.Context;
 pub const Flag = flag.Flag;
 pub const Flags = flag.Flags;
 
-pub const Manual = manual.Manual;
+pub const print = @import("./print/root.zig");
 
 pub fn customize(comptime Custom: type) type {
     return struct {
@@ -31,8 +30,6 @@ pub fn customize(comptime Custom: type) type {
             return flag.Flags(Custom, flags);
         }
 
-        pub fn Manual(comptime commands: []const C.Command) type {
-            return manual.Manual(Custom, commands);
-        }
+        pub const print = @import("./print/root.zig").customize(Custom);
     };
 }
