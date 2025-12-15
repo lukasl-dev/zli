@@ -10,11 +10,10 @@ Add `zli` to your `build.zig.zon`:
 zig fetch --save git+https://github.com/lukasl-dev/zli
 ```
 
-And to your `build.zig`:
+And to your `build.zig`.
 
 ```zig
 const zli = b.dependency("zli", .{});
-exe.root_module.addImport("zli", zli.module("zli"));
 ```
 
 ## Usage
