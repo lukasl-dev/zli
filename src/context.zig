@@ -11,7 +11,7 @@ pub fn Context(comptime Custom: type) type {
 
         exec: []const u8,
         name: []const u8,
-        args: *std.process.ArgIterator,
+        args: *std.process.Args.Iterator,
 
         custom: Custom,
 

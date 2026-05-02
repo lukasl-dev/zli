@@ -4,7 +4,7 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
     systems.url = "github:nix-systems/default";
-    zig-overlay.follows = "zls/zig-overlay";
+    zig-overlay.url = "github:mitchellh/zig-overlay";
     zls.url = "github:zigtools/zls";
   };
 
@@ -19,7 +19,7 @@
     let
       forEachSystem = nixpkgs.lib.genAttrs (import systems);
 
-      mkZig = system: zig-overlay.packages.${system}.master;
+      mkZig = system: zig-overlay.packages.${system}."0.16.0";
     in
     {
       devShells = forEachSystem (

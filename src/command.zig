@@ -40,7 +40,7 @@ pub fn Commands(
         pub fn context(
             self: Self,
             name: []const u8,
-            args: *std.process.ArgIterator,
+            args: *std.process.Args.Iterator,
             custom: Custom,
         ) zli.Context(Custom) {
             return .{
@@ -65,7 +65,7 @@ pub fn Commands(
         pub fn run(
             self: Self,
             name: []const u8,
-            args: *std.process.ArgIterator,
+            args: *std.process.Args.Iterator,
             custom: Custom,
         ) !void {
             const cmd = find(name) orelse return Error.UnknownCommand;

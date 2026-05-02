@@ -37,17 +37,17 @@ fn foo_flag_accept(ctx: zli.Context) !void {
     try ctx.stdout.print("flag accept\n", .{});
 }
 
-pub fn main() !void {
-    var args = std.process.args();
+pub fn main(init: std.process.Init) !void {
+    var args = try std.process.Args.Iterator.initAllocator(init.minimal.args, init.gpa);
     defer args.deinit();
 
     const exec = args.next().?;
 
     var stdout_buf: [1024]u8 = undefined;
-    var stdout = std.fs.File.stdout().writer(&stdout_buf);
+    var stdout = std.Io.File.stdout().writer(init.io, &stdout_buf);
 
     var stderr_buf: [1024]u8 = undefined;
-    var stderr = std.fs.File.stderr().writer(&stderr_buf);
+    var stderr = std.Io.File.stderr().writer(init.io, &stderr_buf);
 
     var runner: zli.Commands(commands) = .init(
         &stdout.interface,
